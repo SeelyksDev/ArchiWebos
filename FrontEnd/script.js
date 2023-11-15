@@ -18,47 +18,29 @@ function displayTravaux(travaux) {
 }
 
 function choixCategorie(categorie) {
-const categorieFiltree = travauxData.filter(travail => travail.category.name === categorie)
-displayTravaux(categorieFiltree)
+    if (categorie === '') {
+        displayTravaux(travauxData);
+    } else {
+        const categorieFiltree = travauxData.filter(travail => travail.category.name === categorie)
+        displayTravaux(categorieFiltree)
+    }
 }
 
-function filtreTous() {
-    const btnTous = document.querySelector('.btn-tous')
-    btnTous.addEventListener('click', () => {
-        fetchTravaux()
-        displayTravaux(travauxData)
+function eventListener(categorie, btnSelector) {
+    const btn = document.querySelector(btnSelector)
+    btn.addEventListener('click', () => {
+        choixCategorie(categorie)
     })
 }
 
-function filtreObjet() {
-    const btnObjet = document.querySelector('.btn-objets');
-    btnObjet.addEventListener('click', () => {
-        const objetFiltrees = travauxData.filter(travail => travail.category.name === "Objets");
-        displayTravaux(objetFiltrees);
-    });
-}
 
-function filtreAppartements() {
-    const btnAppartements = document.querySelector('.btn-appartements')
-    btnAppartements.addEventListener('click', () => {
-        const appartementsFiltrees = travauxData.filter(travail => travail.category.name === "Appartements")
-        displayTravaux(appartementsFiltrees)
-    })
-}
-
-function filtreHotelEtAppart() {
-    const btnHotelEtAppart = document.querySelector('.btn-hotels')
-    btnHotelEtAppart.addEventListener('click', () => {
-    const hotelEtAppartFiltees = travauxData.filter(travail => travail.category.name === "Hotels & restaurants" )
-    displayTravaux(hotelEtAppartFiltees)
-})
-}
 
 fetchTravaux();
-filtreTous()
-filtreObjet();
-filtreAppartements()
-filtreHotelEtAppart()
+eventListener("Objets", ".btn-objets")
+eventListener("Appartements", ".btn-appartements")
+eventListener("Hotels & restaurants", ".btn-hotels")
+eventListener("", ".btn-tous")
+
 
 
 
