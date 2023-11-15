@@ -17,6 +17,11 @@ function displayTravaux(travaux) {
     gallery.innerHTML = galleryHtml;
 }
 
+function choixCategorie(categorie) {
+const categorieFiltree = travauxData.filter(travail => travail.category.name === categorie)
+displayTravaux(categorieFiltree)
+}
+
 function filtreTous() {
     const btnTous = document.querySelector('.btn-tous')
     btnTous.addEventListener('click', () => {
