@@ -33,8 +33,6 @@ function eventListener(categorie, btnSelector) {
     })
 }
 
-
-
 fetchTravaux();
 eventListener("Objets", ".btn-objets")
 eventListener("Appartements", ".btn-appartements")
