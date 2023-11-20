@@ -1,69 +1,59 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Log in</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap"
-            rel="stylesheet"
-        />
-        <meta name="description" content="" />
-        <link rel="stylesheet" href="./assets/login.css" />
-        <script src="/FrontEnd/login.js" defer></script>
-    </head>
-    <body>
-        <div class="container">
-            <header>
-                <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
-                <nav>
-                    <ul>
-                        <li>projets</li>
-                        <li>contact</li>
-                        <li id="login-bold">login</li>
-                        <li>
-                            <img
-                                id="insta-img"
-                                src="./assets/icons/instagram.png"
-                                alt="Instagram"
-                            />
-                        </li>
-                    </ul>
-                </nav>
-            </header>
-            <main>
-                <section class="login-container">
-                    <h2 class="login-title">Log In</h2>
-                    <form class="form-login" method="post" action="">
-                        <div class="e-mail">
-                            <label class="mail-label" for="e-mail"
-                                >E-mail</label
-                            >
-                            <input type="text" id="e-mail" />
-                        </div>
-                        <div class="password">
-                            <label class="password-label" for="password"
-                                >Mot de passe</label
-                            >
-                            <input type="password" id="password" />
-                        </div>
-                        <input
-                            id="connect-btn"
-                            type="submit"
-                            value="Se connecter"
-                        />
-                        <a class="password-oublié" href="#"
-                            >Mot de passe oublié</a
-                        >
-                    </form>
-                </section>
-            </main>
-        </div>
-        <footer>
-            <p>Mentions légales</p>
-        </footer>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Log in</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="./assets/login.css" />
+    <script src="/FrontEnd/login.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
+        <nav>
+          <ul>
+            <li>projets</li>
+            <li>contact</li>
+            <li id="login-bold">login</li>
+            <li>
+              <img
+                id="insta-img"
+                src="./assets/icons/instagram.png"
+                alt="Instagram"
+              />
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <main>
+        <section class="login-container">
+          <h2 class="login-title">Log In</h2>
+          <form class="form-login" method="post" action="">
+            <div class="e-mail">
+              <label class="mail-label" for="e-mail">E-mail</label>
+              <input type="text" id="e-mail" name="email" />
+            </div>
+            <div class="password">
+              <label class="password-label" for="password">Mot de passe</label>
+              <input type="password" id="password" name="mot-de-passe" />
+            </div>
+            <input id="connect-btn" type="submit" value="Se connecter" />
+            <a class="password-oublié" href="#">Mot de passe oublié</a>
+          </form>
+        </section>
+      </main>
+    </div>
+    <footer>
+      <p>Mentions légales</p>
+    </footer>
+  </body>
 </html>
