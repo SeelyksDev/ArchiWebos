@@ -25,6 +25,10 @@ h1 {
     color: #B1663C
 }
 
+.title-link {
+    text-decoration: none;
+}
+
 h1>span {
     font-family: 'Work Sans';
     font-size: 10px;
@@ -101,6 +105,14 @@ li:hover {
     margin-bottom: 25px;
 }
 
+.wrong-info {
+    display: flex;
+    justify-content: center;
+    color: red;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
 #connect-btn {
     cursor: pointer;
     font-family: 'Syne';
@@ -139,4 +151,10 @@ footer {
 footer>p {
     position: absolute;
     right: 190px;
+    font-size: 1.2em;
+}
+
+footer>p:hover {
+    color: #B1663C;
+    cursor: pointer;
 }
