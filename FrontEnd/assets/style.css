@@ -72,8 +72,9 @@ header, main, footer {
 	color: white;
 	width: 100%;
 	display: flex;
-	justify-content: center;
 	align-items: center;
+	justify-content: center;
+
 }
 
 .fa-pen-to-square {
@@ -129,6 +130,10 @@ nav ul {
 	font-weight: bold;
 }
 
+.li-logout {
+	display: none;
+}
+
 nav li {
 	cursor: pointer;
 	padding: 0 20px;
@@ -171,11 +176,32 @@ li:hover {
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
+	position: relative;
 }
 
-#portfolio h2 {
-	text-align: center;
+.project-header {
+	display: flex;
+	justify-content: center;
 	margin-bottom: 2em;
+}
+
+.project-header h2 {
+	padding-right: 20px;
+	text-align: center;
+}
+
+.edition-projet {
+	display: flex;
+	align-self: center;
+	display: none;
+}
+
+.edition-projet span {
+	cursor: pointer;
+}
+
+.edition-projet i {
+	margin-right: 5px;
 }
 
 .filter_box {

@@ -1,3 +1,10 @@
+const editionBox = document.querySelector(".edition-box")
+const liLogin = document.querySelector(".li-login")
+const liLogout = document.querySelector(".li-logout")
+const editionProjet = document.querySelector(".edition-projet")
+const filterBox = document.querySelector(".filter_box")
+let travauxData = ""
+
 async function fetchTravaux() {
     const response = await fetch("http://localhost:5678/api/works");
     travauxData = await response.json();
@@ -40,5 +47,15 @@ eventListener("Hotels & restaurants", ".btn-hotels")
 eventListener("", ".btn-tous")
 
 
+ function modeAdmin() {
+    //editionBox.style.display = "block"
+    liLogin.style.display = "none"
+    liLogout.style.display = "block"
+    editionProjet.style.display = "block"
+    filterBox.style.display = "none"
+}
 
 
+if (localStorage.getItem("userData")) {
+        modeAdmin()  
+}
