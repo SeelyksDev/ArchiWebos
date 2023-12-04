@@ -3,48 +3,32 @@ const wrongInfo = document.querySelector(".wrong-info");
 
 envoyer.addEventListener("submit", (event) => {
     event.preventDefault();
-    const authentification = {
-        email: event.target.querySelector("[name=email]").value,
-        password: event.target.querySelector("[name=mot-de-passe]").value,
-    };
-    const chargeUtile = JSON.stringify(authentification);
-
-    let emailRegExp = new RegExp("[a-z0-9._-]+@[a-z0-9._-]+.[a-z0-9._-]+");
-    let passwordRegExp = new RegExp("^(?=.*[A-Z])(?=.*\\d).+$");
-
-    if (
-        emailRegExp.test(authentification.email) &&
-        passwordRegExp.test(authentification.password)
-    ) {
-        fetch("http://localhost:5678/api/users/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: chargeUtile,
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Erreur réseau.");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                localStorage.setItem("userData", JSON.stringify(data.token));
-                console.log(localStorage.getItem("userData"));
-                wrongInfo.textContent = "";
-                window.location.href = "index.html";
-            })
-            .catch((error) => {
-                console.log(error);
-                //wrongInfo.textContent = "E-mail ou Mot de passe incorrect";
-            });
+    const infoUser = dataUser(event);
+    if (verifRegExp(infoUser)) {
+        recupToken(infoUser);
     } else {
-        wrongInfo.textContent = "E-mail ou Mot de passe incorrect";
+        DisplayWrongInfo("E-mail ou Mot de passe incorrect");
     }
 });
 
-/*
-const maFunction = async () => {
+const dataUser = (event) => {
+    const email = event.target.querySelector("[name=email]").value;
+    const password = event.target.querySelector("[name=mot-de-passe]").value;
+    return { email, password };
+};
+
+const verifRegExp = (authValue) => {
+    let emailRegExp = new RegExp("[a-z0-9._-]+@[a-z0-9._-]+.[a-z0-9._-]+");
+    let passwordRegExp = new RegExp("^(?=.*[A-Z])(?=.*\\d).+$");
+    return (
+        emailRegExp.test(authValue.email) &&
+        passwordRegExp.test(authValue.password)
+    );
+};
+
+const recupToken = async (authValue) => {
     try {
+        const chargeUtile = JSON.stringify(authValue);
         let url = "http://localhost:5678/api/users/login";
         let options = {
             method: "POST",
@@ -53,10 +37,17 @@ const maFunction = async () => {
         };
         let response = await fetch(url, options);
         let data = await response.json();
-
-
+        if (!response.ok) {
+            throw new Error("Erreur réseau.");
+        } else {
+            localStorage.setItem("Token", JSON.stringify(data.token));
+            wrongInfo.textContent = "";
+            window.location.href = "index.html";
+        }
     } catch (error) {
         console.log(error);
     }
 };
-*/
+const DisplayWrongInfo = (message) => {
+    wrongInfo.textContent = message;
+};
