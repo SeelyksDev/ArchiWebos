@@ -48,7 +48,7 @@ const choixCategorie = (categorie) => {
 
 const eventListener = (categorie, btnSelector) => {
     const btn = document.querySelector(btnSelector);
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", (event) => {
         choixCategorie(categorie);
     });
 };
@@ -82,10 +82,14 @@ btnModif.addEventListener("click", () => {
         fetchTravaux(displayGallery);
         modifBtnClicked = true;
     }
-});
 
-containerModale.addEventListener("click", () => {
-    containerModale.style.display = "none";
+    containerModale.addEventListener("click", () => {
+        containerModale.style.display = "none";
+    });
+
+    document.querySelector(".modale").addEventListener("click", (event) => {
+        event.stopPropagation();
+    });
 });
 
 cross.addEventListener("click", () => {
@@ -94,6 +98,7 @@ cross.addEventListener("click", () => {
 
 const displayGallery = (travaux) => {
     travaux.forEach((travail) => {
+        console.log(travail);
         const boxImg = document.createElement("div");
         boxImg.classList.add("box-img");
         const img = document.createElement("img");
@@ -103,6 +108,11 @@ const displayGallery = (travaux) => {
         boxImg.appendChild(img);
         const btnRemove = document.createElement("button");
         btnRemove.classList.add("remove-box");
+        btnRemove.dataset.id = travail.id;
+        btnRemove.addEventListener("click", (event) => {
+            console.log(event);
+        });
+
         boxImg.appendChild(btnRemove);
         const iconRemove = document.createElement("i");
         iconRemove.classList.add("fa-solid", "fa-trash-can", "icon-remove");
