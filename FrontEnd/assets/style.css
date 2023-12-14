@@ -142,7 +142,9 @@ body {
   background-color: #fffef8;
 }
 
-.modale-container {
+/* ----------- FIRST MODALE ----------------*/
+
+.modale-container, .modale-add-container {
   position: fixed;
   top: 0;
   left: 0;
@@ -152,7 +154,7 @@ body {
   z-index: 10;
 }
 
-.modale {
+.modale, .modale-add {
   position: fixed;
   background-color: white;
   top: 50%;
@@ -172,7 +174,7 @@ body {
   cursor: pointer;
 }
 
-.modale-aligncenter {
+.modale-aligncenter, .modale-add-aligncenter {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -252,6 +254,108 @@ body {
   background-color: #d9d9d9;
 }
 
+/* ----------- FIRST MODALE ----------------*/
+
+/* ----------- MODALE AJOUT PHOTOS ----------- */
+.add-picture-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 420px;
+  background-color: #E8F1F6;
+  border-radius: 5px;
+  margin-top: 40px;
+  margin-bottom: 35px;
+}
+
+.modale-add {
+  position: relative;
+}
+
+.arrow-left-modale {
+  position: absolute;
+  top: 28px;
+  left: 35px;
+  font-size: 25px;
+}
+
+.modale-add-title {
+  margin-top: 80px;
+}
+
+.fa-image {
+  font-size: 76px;
+  color: #B9C5CC;
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+
+.select-picture {
+  font-size: 14px;
+  border: none;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 40px;
+  width: 200px;
+  font-weight: 600;
+  background-color: #CBD6DC;
+  color: #306685;
+  margin-bottom: 10px;
+}
+
+.info-picture {
+  font-size: 12px;
+  margin-top: 1px;
+  margin-bottom: 22px;
+}
+
+.title-form, .category-form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 25px;
+}
+
+.label-title, .label-category {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.input-title {
+  width: 420px;
+  height: 51px;
+  border: none;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  font-family: "Work Sans";
+}
+
+.input-category {
+  width: 424px;
+  height: 51px;
+  border: none;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  font-family: "Work Sans";
+}
+
+.valid-btn {
+  background-color: #A7A7A7;
+  margin-bottom: 60px;
+  width: 237px;
+}
+
+.valid-btn::before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  width: 420px;
+  height: 2px;
+  background-color: #d9d9d9;
+}
+
+/* ----------- MODALE AJOUT PHOTOS ----------- */
+
 header,
 main,
 footer {
@@ -297,7 +401,7 @@ h1 {
   color: #b1663c;
 }
 
-h1 > span {
+h1>span {
   font-family: "Work Sans";
   font-size: 10px;
   letter-spacing: 0.1em;
@@ -470,7 +574,7 @@ li:hover {
   margin: auto;
 }
 
-#contact > * {
+#contact>* {
   text-align: center;
 }
 

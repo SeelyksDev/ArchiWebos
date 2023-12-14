@@ -40,7 +40,7 @@ const recupToken = async (authValue) => {
         if (!response.ok) {
             throw new Error("Erreur réseau.");
         } else {
-            localStorage.setItem("Token", JSON.stringify(data.token));
+            localStorage.setItem("auth", JSON.stringify(data));
             wrongInfo.textContent = "";
             window.location.href = "index.html";
         }
