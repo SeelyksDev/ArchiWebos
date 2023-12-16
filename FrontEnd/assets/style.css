@@ -144,7 +144,8 @@ body {
 
 /* ----------- FIRST MODALE ----------------*/
 
-.modale-container, .modale-add-container {
+.modale-container,
+.modale-add-container {
   position: fixed;
   top: 0;
   left: 0;
@@ -154,7 +155,8 @@ body {
   z-index: 10;
 }
 
-.modale, .modale-add {
+.modale,
+.modale-add {
   position: fixed;
   background-color: white;
   top: 50%;
@@ -174,7 +176,8 @@ body {
   cursor: pointer;
 }
 
-.modale-aligncenter, .modale-add-aligncenter {
+.modale-aligncenter,
+.modale-add-aligncenter {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -263,7 +266,8 @@ body {
   justify-content: center;
   flex-direction: column;
   width: 420px;
-  background-color: #E8F1F6;
+  min-height: 200px;
+  background-color: #e8f1f6;
   border-radius: 5px;
   margin-top: 40px;
   margin-bottom: 35px;
@@ -284,14 +288,20 @@ body {
   margin-top: 80px;
 }
 
+.preview-image {
+  height: 200px;
+  width: 150px;
+  object-fit: cover;
+}
+
 .fa-image {
   font-size: 76px;
-  color: #B9C5CC;
+  color: #b9c5cc;
   margin-top: 20px;
   margin-bottom: 15px;
 }
 
-.select-picture {
+.label-btn-picture {
   font-size: 14px;
   border: none;
   height: 40px;
@@ -301,9 +311,14 @@ body {
   border-radius: 40px;
   width: 200px;
   font-weight: 600;
-  background-color: #CBD6DC;
+  background-color: #cbd6dc;
   color: #306685;
   margin-bottom: 10px;
+  cursor: pointer;
+}
+
+#select-picture {
+  display: none;
 }
 
 .info-picture {
@@ -312,13 +327,15 @@ body {
   margin-bottom: 22px;
 }
 
-.title-form, .category-form {
+.title-form,
+.category-form {
   display: flex;
   flex-direction: column;
   margin-bottom: 25px;
 }
 
-.label-title, .label-category {
+.label-title,
+.label-category {
   font-weight: 600;
   margin-bottom: 10px;
 }
@@ -340,7 +357,7 @@ body {
 }
 
 .valid-btn {
-  background-color: #A7A7A7;
+  background-color: #a7a7a7;
   margin-bottom: 60px;
   width: 237px;
 }
@@ -401,7 +418,7 @@ h1 {
   color: #b1663c;
 }
 
-h1>span {
+h1 > span {
   font-family: "Work Sans";
   font-size: 10px;
   letter-spacing: 0.1em;
@@ -574,7 +591,7 @@ li:hover {
   margin: auto;
 }
 
-#contact>* {
+#contact > * {
   text-align: center;
 }
 
