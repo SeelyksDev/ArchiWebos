@@ -3,8 +3,9 @@ const liLogin = document.querySelector(".li-login");
 const liLogout = document.querySelector(".li-logout");
 const editionProjet = document.querySelector(".edition-projet");
 const filterBox = document.querySelector(".filter_box");
+const li = document.createElement("li");
 const filterButtons = document.querySelectorAll(".filter-btn");
-const filterBtn1 = document.querySelector(".btn-tous");
+const btnTous = document.querySelector(".btn-tous");
 const btnLogout = document.querySelector(".li-logout");
 const btnModif = document.querySelector(".modif-btn");
 const body = document.querySelector("body");
@@ -47,11 +48,10 @@ let travauxData = "";
 
 //Fonction de récuperation des travaux
 const fetchTravaux = async () => {
-    const response = await fetch("http://localhost:5678/api/works");
-    travauxData = await response.json();
-    displayTravaux(travauxData);
+  const response = await fetch("http://localhost:5678/api/works");
+  travauxData = await response.json();
+  displayTravaux(travauxData);
 };
-
 /*
 const init = async () => {
     let works = getWorks();
@@ -68,303 +68,425 @@ const getWorks = async () => {
 
 // Fonction qui implémente le html pour l'affichage des travaux dans le dom
 const displayTravaux = (travaux) => {
-    const gallery = document.querySelector(".gallery");
-    let galleryHtml = "";
-    travaux.forEach((travail) => {
-        galleryHtml += `
+  const gallery = document.querySelector(".gallery");
+  let galleryHtml = "";
+  travaux.forEach((travail) => {
+    galleryHtml += `
             <figure>
                 <img src="${travail.imageUrl}" alt="${travail.title}" />
                 <figcaption>${travail.title}</figcaption>
             </figure>`;
+  });
+  gallery.innerHTML = galleryHtml;
+};
+
+const fetchFilters = async () => {
+  const response = await fetch("http://localhost:5678/api/categories");
+  const categoryData = await response.json();
+  displayFilters(categoryData);
+  manageFilterClick(); // Appel de la fonction pour gérer les filtres au clic
+};
+
+const displayFilters = (filters) => {
+  const filterBox = document.querySelector(".filter_box");
+
+  const tousFilter = document.createElement("li");
+  tousFilter.classList.add("filter-btn", "btn-tous", "active");
+  tousFilter.textContent = "Tous";
+
+  tousFilter.addEventListener("click", () => {
+    choixCategorie(""); // Filtrer pour afficher tous les travaux
+  });
+
+  filterBox.appendChild(tousFilter);
+
+  filters.forEach((filter) => {
+    const li = document.createElement("li");
+    li.textContent = filter.name;
+    li.classList.add("filter-btn");
+
+    li.addEventListener("click", () => {
+      choixCategorie(filter.id); // Filtrer en fonction de l'ID de la catégorie sélectionnée
     });
-    gallery.innerHTML = galleryHtml;
+
+    filterBox.appendChild(li);
+  });
 };
 
-// Fonction qui gère le choix des catégories
-const choixCategorie = (categorie) => {
-    if (categorie === "") {
-        displayTravaux(travauxData);
-    } else {
-        const categorieFiltree = travauxData.filter(
-            (travail) => travail.category.name === categorie
-        );
-        displayTravaux(categorieFiltree);
-    }
+const choixCategorie = (categoryId) => {
+  let categorieFiltree;
+
+  if (categoryId === "") {
+    // Afficher tous les travaux
+    categorieFiltree = travauxData;
+  } else {
+    // Filtrer les travaux en fonction de l'ID de la catégorie sélectionnée
+    categorieFiltree = travauxData.filter(
+      (travail) => travail.categoryId === categoryId
+    );
+  }
+
+  displayTravaux(categorieFiltree);
 };
 
-// Fonction qui gère l'eventListener au clic sur l'un des boutons filtres
-const eventListener = (categorie, btnSelector) => {
-    const btn = document.querySelector(btnSelector);
-    btn.addEventListener("click", () => {
-        choixCategorie(categorie);
-    });
-};
-
+fetchFilters();
 fetchTravaux();
-eventListener("Objets", ".btn-objets");
-eventListener("Appartements", ".btn-appartements");
-eventListener("Hotels & restaurants", ".btn-hotels");
-eventListener("", ".btn-tous");
+
+const manageFilterClick = () => {
+  const filterButtons = document.querySelectorAll(".filter_box li");
+
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      filterButtons.forEach((btn) => {
+        btn.classList.remove("active");
+      });
+
+      button.classList.add("active");
+    });
+  });
+};
 
 //Fonction qui affiche le mode Admin
 const modeAdmin = () => {
-    console.log("admin");
-    editionBox.style.height = "59px";
-    liLogin.style.display = "none";
-    liLogout.style.display = "block";
-    editionProjet.style.display = "block";
-    filterBox.style.visibility = "hidden";
+  editionBox.style.height = "59px";
+  liLogin.style.display = "none";
+  liLogout.style.display = "block";
+  editionProjet.style.display = "block";
+  filterBox.style.visibility = "hidden";
 };
 
 //Création de la variable qui contient ou non "auth", le token utilisateur
 let auth = JSON.parse(localStorage.getItem("auth")) ?? false;
 
 if (auth) {
-    modeAdmin();
-    btnLogout.addEventListener("click", () => {
-        window.localStorage.removeItem("auth");
-        window.location.href = "index.html";
-    });
+  modeAdmin();
+  btnLogout.addEventListener("click", () => {
+    window.localStorage.removeItem("auth");
+    window.location.href = "index.html";
+  });
 }
-
-// Au declenchement du chargement de la page je redonne le fond vert au filtre "Tous"
-window.addEventListener("load", () => {
-    filterBtn1.classList.add("active");
-});
-
-//Boucle qui gère la selection du filtre qui reçoit le fond vert au clic sur celui-ci
-filterButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-        filterButtons.forEach((btn) => {
-            btn.classList.remove("active");
-        });
-
-        button.classList.add("active");
-    });
-});
 
 //Je créer ma variable en lui donnant la valeur false
 let modifBtnClicked = false;
 
 //Quand je clique sur le btn modifier j'affiche ma modale via displayModale()
 btnModif.addEventListener("click", () => {
-    displayModale();
-    /*Si modifBtnClicked = à false je fait appel à l'api pour afficher mes travaux 
+  displayModale();
+  /*Si modifBtnClicked = à false je fait appel à l'api pour afficher mes travaux 
 et je passe ma variable à true pour en pas refaire un appel si je ferme et réouvre ma modale*/
-    if (modifBtnClicked === false) {
-        displayGallery(travauxData);
-        modifBtnClicked = true;
-    }
-    // Quand je clique à l'exterieur de la modale, elle se ferme
-    containerModale.addEventListener("click", () => {
-        containerModale.style.display = "none";
-    });
+  if (modifBtnClicked === false) {
+    displayGallery(travauxData);
+    modifBtnClicked = true;
+  }
+  // Quand je clique à l'exterieur de la modale, elle se ferme
+  containerModale.addEventListener("click", () => {
+    containerModale.style.display = "none";
+  });
 
-    // Je demande à ma modale de ne pas se fermer quand je clique sur celle-ci
-    document.querySelector(".modale").addEventListener("click", (event) => {
-        event.stopPropagation();
-    });
+  // Je demande à ma modale de ne pas se fermer quand je clique sur celle-ci
+  document.querySelector(".modale").addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
 });
 
 //Fermeture de la modale quand je clique sur l'icone "cross"
 cross.addEventListener("click", () => {
-    containerModale.style.display = "none";
+  containerModale.style.display = "none";
 });
 
 //Fonction qui s'occupe de l'affichage de la gallery dans la modale L.154
 const displayGallery = (travaux) => {
-    //Pour chaque element dans la reponse de l'API j'effectue...
-    travaux.forEach((travail) => {
-        const boxImg = document.createElement("div");
-        boxImg.classList.add("box-img");
-        const img = document.createElement("img");
-        //Récupération d'imageUrl qui se trouve dans la réponse de l'API
-        img.src = travail.imageUrl;
-        img.classList.add("modale-img");
-        modifGallery.appendChild(boxImg);
-        boxImg.appendChild(img);
-        const btnRemove = document.createElement("button");
-        btnRemove.type = "button";
-        btnRemove.classList.add("remove-box");
-        btnRemove.dataset.id = travail.id;
-        btnRemove.addEventListener("click", () => {
-            deleteTravaux(btnRemove.dataset.id);
-        });
-        boxImg.appendChild(btnRemove);
-        const iconRemove = document.createElement("i");
-        iconRemove.classList.add("fa-solid", "fa-trash-can", "icon-remove");
-        btnRemove.appendChild(iconRemove);
+  //Pour chaque element dans la reponse de l'API j'effectue...
+  travaux.forEach((travail) => {
+    const boxImg = document.createElement("div");
+    boxImg.classList.add("box-img");
+    const img = document.createElement("img");
+    //Récupération d'imageUrl qui se trouve dans la réponse de l'API
+    img.src = travail.imageUrl;
+    img.classList.add("modale-img");
+    modifGallery.appendChild(boxImg);
+    boxImg.appendChild(img);
+    const btnRemove = document.createElement("button");
+    btnRemove.type = "button";
+    btnRemove.classList.add("remove-box");
+    btnRemove.dataset.id = travail.id;
+    btnRemove.addEventListener("click", () => {
+      deleteTravaux(btnRemove.dataset.id);
     });
+    boxImg.appendChild(btnRemove);
+    const iconRemove = document.createElement("i");
+    iconRemove.classList.add("fa-solid", "fa-trash-can", "icon-remove");
+    btnRemove.appendChild(iconRemove);
+  });
 };
 
 const displayModale = () => {
-    containerModale.classList.add("modale-container");
-    body.appendChild(containerModale);
-    containerModale.style.display = "block";
+  containerModale.classList.add("modale-container");
+  body.appendChild(containerModale);
+  containerModale.style.display = "block";
 
-    modale.classList.add("modale");
-    containerModale.appendChild(modale);
+  modale.classList.add("modale");
+  containerModale.appendChild(modale);
 
-    cross.classList.add("fa-solid", "fa-xmark", "cross");
-    modale.appendChild(cross);
+  cross.classList.add("fa-solid", "fa-xmark", "cross");
+  modale.appendChild(cross);
 
-    alignCenterModale.classList.add("modale-aligncenter");
-    modale.appendChild(alignCenterModale);
+  alignCenterModale.classList.add("modale-aligncenter");
+  modale.appendChild(alignCenterModale);
 
-    modaleTitle.classList.add("modale-title");
-    modaleTitle.textContent = "Galerie photo";
-    alignCenterModale.appendChild(modaleTitle);
+  modaleTitle.classList.add("modale-title");
+  modaleTitle.textContent = "Galerie photo";
+  alignCenterModale.appendChild(modaleTitle);
 
-    modifGallery.classList.add("gallery-modif");
-    alignCenterModale.appendChild(modifGallery);
+  modifGallery.classList.add("gallery-modif");
+  alignCenterModale.appendChild(modifGallery);
 
-    addBtn.classList.add("add-btn");
-    addBtn.textContent = "Ajouter une photo";
-    alignCenterModale.appendChild(addBtn);
-    addBtn.addEventListener("click", () => {
-        containerModale.style.display = "none";
-        addModale();
-    });
+  addBtn.classList.add("add-btn");
+  addBtn.textContent = "Ajouter une photo";
+  alignCenterModale.appendChild(addBtn);
+  addBtn.addEventListener("click", () => {
+    containerModale.style.display = "none";
+    addModale();
+  });
 };
 
 const deleteTravaux = async (id) => {
-    let response = await fetch(`http://localhost:5678/api/works/${id}`, {
-        method: "DELETE",
-        headers: {
-            Authorization: `Bearer ${auth.token}`,
-        },
-    });
+  let response = await fetch(`http://localhost:5678/api/works/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${auth.token}`,
+    },
+  });
 
-    if (!response.ok) {
-        throw new Error("La requête n'a pas abouti");
-    } else {
-        console.log("reussi !");
-    }
+  if (!response.ok) {
+    throw new Error("La requête n'a pas abouti");
+  } else {
+    console.log("reussi !");
+  }
 };
 
 const addModale = () => {
-    containerModaleAdd.classList.add("modale-add-container");
-    body.appendChild(containerModaleAdd);
-    containerModaleAdd.style.display = "block";
-    containerModaleAdd.addEventListener("click", () => {
-        containerModaleAdd.style.display = "none";
-    });
+  containerModaleAdd.classList.add("modale-add-container");
+  body.appendChild(containerModaleAdd);
+  containerModaleAdd.style.display = "block";
+  containerModaleAdd.addEventListener("click", () => {
+    containerModaleAdd.style.display = "none";
 
-    modaleAdd.classList.add("modale-add");
-    containerModaleAdd.appendChild(modaleAdd);
+    // Efface l'image sélectionnée et réinitialise le bouton d'ajout de photo
+    addPictureContainer.innerHTML = "";
+    selectPictureBtn.value = null;
+
+    // Supprime l'élément d'erreur s'il existe
+    const errorElement = document.querySelector(".error-img");
+    if (errorElement) {
+      errorElement.remove();
+    }
+
+    // Supprime l'image affichée
+    const previewImage = document.querySelector(".preview-image");
+    if (previewImage) {
+      previewImage.remove();
+    }
+
+    // Empêcher la propagation du clic dans le contenu de la modale
     modaleAdd.addEventListener("click", (event) => {
-        event.stopPropagation();
+      event.stopPropagation();
     });
+  });
 
-    crossAddModale.classList.add("fa-solid", "fa-xmark", "cross");
-    modaleAdd.appendChild(crossAddModale);
-    crossAddModale.addEventListener("click", () => {
-        containerModaleAdd.style.display = "none";
-    });
+  modaleAdd.classList.add("modale-add");
+  containerModaleAdd.appendChild(modaleAdd);
+  modaleAdd.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
 
-    arrowLeftModale.classList.add(
-        "fa-solid",
-        "fa-arrow-left",
-        "arrow-left-modale"
-    );
-    arrowLeftModale.addEventListener("click", () => {
-        displayModale();
-        containerModaleAdd.style.display = "none";
-        const previewImg = document.querySelector(".preview-image");
-        previewImg.style.display = "none";
-    });
-    modaleAdd.appendChild(arrowLeftModale);
+  crossAddModale.classList.add("fa-solid", "fa-xmark", "cross");
+  modaleAdd.appendChild(crossAddModale);
+  crossAddModale.addEventListener("click", () => {
+    containerModaleAdd.style.display = "none";
 
-    alignModaleAdd.classList.add("modale-add-aligncenter");
-    modaleAdd.appendChild(alignModaleAdd);
+    // Efface l'image sélectionnée et réinitialise le bouton d'ajout de photo
+    addPictureContainer.innerHTML = "";
+    selectPictureBtn.value = null;
 
-    modaleAddTitle.classList.add("modale-title", "modale-add-title");
-    modaleAddTitle.textContent = "Ajout photo";
-    alignModaleAdd.appendChild(modaleAddTitle);
+    // Supprime l'élément d'erreur s'il existe
+    const errorElement = document.querySelector(".error-img");
+    if (errorElement) {
+      errorElement.remove();
+    }
 
-    addPictureContainer.classList.add("add-picture-container");
-    alignModaleAdd.appendChild(addPictureContainer);
+    // Supprime l'image affichée
+    const previewImage = document.querySelector(".preview-image");
+    if (previewImage) {
+      previewImage.remove();
+    }
+  });
 
-    iconPicture.classList.add("fa-regular", "fa-image");
-    addPictureContainer.appendChild(iconPicture);
+  arrowLeftModale.classList.add(
+    "fa-solid",
+    "fa-arrow-left",
+    "arrow-left-modale"
+  );
+  arrowLeftModale.addEventListener("click", () => {
+    displayModale();
+    containerModaleAdd.style.display = "none";
+    selectPictureBtn.value = null;
 
-    selectPictureLabel.setAttribute("for", "select-picture");
-    selectPictureLabel.classList.add("label-btn-picture");
-    selectPictureLabel.textContent = "+ Ajouter photo";
-    addPictureContainer.appendChild(selectPictureLabel);
-    selectPictureBtn.addEventListener("change", () => {
-        const file = selectPictureBtn.files[0];
-        console.log(file);
-        if (file) {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
+    // Supprimer l'élément d'erreur s'il existe
+    const errorElement = document.querySelector(".error-img");
+    if (errorElement) {
+      errorElement.remove();
+    }
 
-            reader.onload = (e) => {
-                const image = document.createElement("img");
-                image.src = e.target.result;
-                image.classList.add("preview-image");
-                addPictureContainer.innerHTML = "";
-                addPictureContainer.appendChild(image);
-            };
+    // Supprimer l'image affichée
+    const previewImage = document.querySelector(".preview-image");
+    if (previewImage) {
+      previewImage.remove();
+    }
+  });
+  modaleAdd.appendChild(arrowLeftModale);
+
+  alignModaleAdd.classList.add("modale-add-aligncenter");
+  modaleAdd.appendChild(alignModaleAdd);
+
+  modaleAddTitle.classList.add("modale-title", "modale-add-title");
+  modaleAddTitle.textContent = "Ajout photo";
+  alignModaleAdd.appendChild(modaleAddTitle);
+
+  addPictureContainer.classList.add("add-picture-container");
+  alignModaleAdd.appendChild(addPictureContainer);
+
+  iconPicture.classList.add("fa-regular", "fa-image");
+  addPictureContainer.appendChild(iconPicture);
+
+  selectPictureLabel.setAttribute("for", "select-picture");
+  selectPictureLabel.classList.add("label-btn-picture");
+  selectPictureLabel.textContent = "+ Ajouter photo";
+  addPictureContainer.appendChild(selectPictureLabel);
+  selectPictureBtn.addEventListener("change", () => {
+    const file = selectPictureBtn.files[0];
+    if (file) {
+      const acceptedFormats = ["image/jpeg", "image/png"];
+      const maxSize = 4 * 1024 * 1024;
+
+      const errorElement = document.querySelector(".error-img");
+
+      if (errorElement) {
+        errorElement.remove();
+      }
+
+      let alreadyDisplay = false;
+
+      if (!acceptedFormats.includes(file.type)) {
+        if (alreadyDisplay === false) {
+          const errorImg = document.createElement("p");
+          errorImg.classList.add("error-img");
+          errorImg.textContent =
+            "Veuillez sélectionner une image au format JPEG ou PNG.";
+          addPictureContainer.appendChild(errorImg);
+          alreadyDisplay = true;
         }
-    });
+        selectPictureBtn.value = null;
+      } else if (file.size > maxSize) {
+        if (alreadyDisplay === false) {
+          const errorImg = document.createElement("p");
+          errorImg.classList.add("error-img");
+          errorImg.textContent = "La taille du fichier dépasse 4 Mo.";
+          addPictureContainer.appendChild(errorImg);
+          alreadyDisplay = true;
+        }
+        selectPictureBtn.value = null;
+      } else {
+        if (errorElement) {
+          errorElement.remove();
+        }
 
-    selectPictureBtn.setAttribute("id", "select-picture");
-    selectPictureBtn.setAttribute("type", "file");
-    selectPictureBtn.setAttribute("accept", "image/jpg , image/png");
-    addPictureContainer.appendChild(selectPictureBtn);
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
 
-    infoPicture.classList.add("info-picture");
-    infoPicture.textContent = "jpg, png : 4mo max";
-    addPictureContainer.appendChild(infoPicture);
+        reader.onload = (event) => {
+          const image = document.createElement("img");
+          image.src = event.target.result;
+          image.classList.add("preview-image");
+          addPictureContainer.innerHTML = "";
+          addPictureContainer.appendChild(image);
+        };
+      }
+    }
+  });
 
-    infoForm.classList.add("info-form");
-    infoForm.method = "POST";
-    alignModaleAdd.appendChild(infoForm);
+  selectPictureBtn.setAttribute("id", "select-picture");
+  selectPictureBtn.setAttribute("type", "file");
+  selectPictureBtn.setAttribute("accept", "image/jpg , image/png");
+  addPictureContainer.appendChild(selectPictureBtn);
 
-    titleForm.classList.add("title-form");
-    infoForm.appendChild(titleForm);
+  infoPicture.classList.add("info-picture");
+  infoPicture.textContent = "jpg, png : 4mo max";
+  addPictureContainer.appendChild(infoPicture);
 
-    labelTitle.classList.add("label-title");
-    labelTitle.setAttribute("for", "title");
-    labelTitle.textContent = "Titre";
-    titleForm.appendChild(labelTitle);
+  infoForm.classList.add("info-form");
+  infoForm.method = "POST";
+  alignModaleAdd.appendChild(infoForm);
 
-    inputTitle.classList.add("input-title");
-    inputTitle.setAttribute("type", "text");
-    inputTitle.setAttribute("id", "title");
-    titleForm.appendChild(inputTitle);
+  titleForm.classList.add("title-form");
+  infoForm.appendChild(titleForm);
 
-    categoryForm.classList.add("category-form");
-    infoForm.appendChild(categoryForm);
+  labelTitle.classList.add("label-title");
+  labelTitle.setAttribute("for", "title");
+  labelTitle.textContent = "Titre";
+  titleForm.appendChild(labelTitle);
 
-    categoryLabel.classList.add("label-category");
-    categoryLabel.setAttribute("for", "category-select");
-    categoryLabel.textContent = "Catégorie";
-    categoryForm.appendChild(categoryLabel);
+  inputTitle.classList.add("input-title");
+  inputTitle.setAttribute("type", "text");
+  inputTitle.setAttribute("id", "title");
+  titleForm.appendChild(inputTitle);
 
-    categoryInput.classList.add("input-category");
-    categoryInput.setAttribute("name", "category");
-    categoryInput.setAttribute("id", "category-select");
-    categoryForm.appendChild(categoryInput);
+  categoryForm.classList.add("category-form");
+  infoForm.appendChild(categoryForm);
 
-    option1.setAttribute("value", "");
-    option1.textContent = "Choisir une catégorie";
-    categoryInput.appendChild(option1);
+  categoryLabel.classList.add("label-category");
+  categoryLabel.setAttribute("for", "category-select");
+  categoryLabel.textContent = "Catégorie";
+  categoryForm.appendChild(categoryLabel);
 
-    option2.setAttribute("value", "Objets");
-    option2.textContent = "Objets";
-    categoryInput.appendChild(option2);
+  categoryInput.classList.add("input-category");
+  categoryInput.setAttribute("name", "category");
+  categoryInput.setAttribute("id", "category-select");
+  categoryForm.appendChild(categoryInput);
 
-    option3.setAttribute("value", "Appartements");
-    option3.textContent = "Appartements";
-    categoryInput.appendChild(option3);
+  option1.setAttribute("value", "");
+  option1.textContent = "Choisir une catégorie";
+  categoryInput.appendChild(option1);
 
-    option4.setAttribute("value", "Hotels & restaurants");
-    option4.textContent = "Hotels & restaurants";
-    categoryInput.appendChild(option4);
+  option2.setAttribute("value", "Objets");
+  option2.textContent = "Objets";
+  categoryInput.appendChild(option2);
 
-    validBtn.classList.add("add-btn", "valid-btn");
-    validBtn.textContent = "Valider";
-    alignModaleAdd.appendChild(validBtn);
+  option3.setAttribute("value", "Appartements");
+  option3.textContent = "Appartements";
+  categoryInput.appendChild(option3);
+
+  option4.setAttribute("value", "Hotels & restaurants");
+  option4.textContent = "Hotels & restaurants";
+  categoryInput.appendChild(option4);
+
+  validBtn.classList.add("add-btn", "valid-btn");
+  validBtn.textContent = "Valider";
+  alignModaleAdd.appendChild(validBtn);
+
+  const toggleValidBtn = () => {
+    const file = selectPictureBtn.files[0];
+    const title = inputTitle.value;
+    const category = categoryInput.value;
+    if (file && title.trim() !== "" && category !== "") {
+      validBtn.disabled = false;
+      validBtn.style.backgroundColor = "#1d6154";
+    } else {
+      validBtn.disabled = true;
+      validBtn.style.backgroundColor = "#a7a7a7";
+    }
+  };
+  selectPictureBtn.addEventListener("change", toggleValidBtn);
+  inputTitle.addEventListener("input", toggleValidBtn);
+  categoryInput.addEventListener("input", toggleValidBtn);
 };
