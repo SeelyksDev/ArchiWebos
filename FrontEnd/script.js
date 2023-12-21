@@ -27,6 +27,7 @@ const arrowLeftModale = document.createElement("i");
 const alignModaleAdd = document.createElement("div");
 const modaleAddTitle = document.createElement("h1");
 const addPictureContainer = document.createElement("div");
+const crossPreview = document.createElement("i");
 const iconPicture = document.createElement("i");
 const selectPictureLabel = document.createElement("label");
 const selectPictureBtn = document.createElement("input");
@@ -194,7 +195,6 @@ cross.addEventListener("click", () => {
   containerModale.style.display = "none";
 });
 
-//Fonction qui s'occupe de l'affichage de la gallery dans la modale L.154
 const displayGallery = (travaux) => {
   //Pour chaque element dans la reponse de l'API j'effectue...
   travaux.forEach((travail) => {
@@ -478,9 +478,14 @@ const addModale = () => {
     const file = selectPictureBtn.files[0];
     const title = inputTitle.value;
     const category = categoryInput.value;
+
     if (file && title.trim() !== "" && category !== "") {
       validBtn.disabled = false;
       validBtn.style.backgroundColor = "#1d6154";
+      validBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        fetchSendWork(title, file, category);
+      });
     } else {
       validBtn.disabled = true;
       validBtn.style.backgroundColor = "#a7a7a7";
@@ -489,4 +494,30 @@ const addModale = () => {
   selectPictureBtn.addEventListener("change", toggleValidBtn);
   inputTitle.addEventListener("input", toggleValidBtn);
   categoryInput.addEventListener("input", toggleValidBtn);
+};
+
+const fetchSendWork = async (title, file, category) => {
+  const formData = new FormData();
+  formData.append("title", title);
+  formData.append("imageUrl", file);
+  formData.append("category", category);
+
+  try {
+    const response = await fetch("http://localhost:5678/api/works", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        authorization: `Bearer ${auth.token}`,
+      },
+      body: formData,
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      console.log(response);
+      throw new Error("L'envoie n'a pas pu aboutir");
+    } else {
+    }
+  } catch (error) {
+    console.error("Erreur ", error);
+  }
 };
