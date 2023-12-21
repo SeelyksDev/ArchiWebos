@@ -1,12 +1,14 @@
 const editionBox = document.querySelector(".edition-box");
 const liLogin = document.querySelector(".li-login");
-const liLogout = document.querySelector(".li-logout");
+const linkContact = document.querySelector("#contact");
+const navLink = document.querySelector(".nav-link");
+const logoutLink = document.createElement("a");
+const liLogout = document.createElement("li");
 const editionProjet = document.querySelector(".edition-projet");
 const filterBox = document.querySelector(".filter_box");
 const li = document.createElement("li");
 const filterButtons = document.querySelectorAll(".filter-btn");
 const btnTous = document.querySelector(".btn-tous");
-const btnLogout = document.querySelector(".li-logout");
 const btnModif = document.querySelector(".modif-btn");
 const body = document.querySelector("body");
 
@@ -150,8 +152,12 @@ const manageFilterClick = () => {
 //Fonction qui affiche le mode Admin
 const modeAdmin = () => {
   editionBox.style.height = "59px";
-  liLogin.style.display = "none";
+  liLogin.insertAdjacentElement("afterend", logoutLink);
+  liLogout.classList.add("li-logout");
+  liLogout.textContent = "logout";
   liLogout.style.display = "block";
+  logoutLink.appendChild(liLogout);
+  liLogin.style.display = "none";
   editionProjet.style.display = "block";
   filterBox.style.visibility = "hidden";
 };
@@ -161,7 +167,7 @@ let auth = JSON.parse(localStorage.getItem("auth")) ?? false;
 
 if (auth) {
   modeAdmin();
-  btnLogout.addEventListener("click", () => {
+  liLogout.addEventListener("click", () => {
     window.localStorage.removeItem("auth");
     window.location.href = "index.html";
   });
