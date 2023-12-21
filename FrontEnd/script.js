@@ -257,17 +257,24 @@ const displayModale = () => {
 };
 
 const deleteTravaux = async (id) => {
-  let response = await fetch(`http://localhost:5678/api/works/${id}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${auth.token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error("La requête n'a pas abouti");
-  } else {
-    console.log("reussi !");
+  try {
+    let response = await fetch(`http://localhost:5678/api/works/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${auth.token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("La requête n'a pas aboutie");
+    } else {
+      const removedElement = document.querySelector(`[data-id="${id}"]`);
+      if (removedElement) {
+        removedElement.parentElement.remove();
+      }
+      fetchTravaux();
+    }
+  } catch (error) {
+    console.error("Erreur lors de la supression : ", error);
   }
 };
 
@@ -517,11 +524,11 @@ const fetchSendWork = async (title, file, category) => {
       },
       body: formData,
     });
-    const data = await response.json();
     if (!response.ok) {
       console.log(response);
       throw new Error("L'envoie n'a pas pu aboutir");
     } else {
+      const data = await response.json();
     }
   } catch (error) {
     console.error("Erreur ", error);
