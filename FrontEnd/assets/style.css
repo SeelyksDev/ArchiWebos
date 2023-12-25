@@ -261,6 +261,7 @@ body {
 
 /* ----------- MODALE AJOUT PHOTOS ----------- */
 .add-picture-container {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -271,6 +272,14 @@ body {
   border-radius: 5px;
   margin-top: 40px;
   margin-bottom: 35px;
+}
+
+.fa-square-xmark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 20px;
+  color: red;
 }
 
 .modale-add {

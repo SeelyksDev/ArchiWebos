@@ -29,7 +29,6 @@ const arrowLeftModale = document.createElement("i");
 const alignModaleAdd = document.createElement("div");
 const modaleAddTitle = document.createElement("h1");
 const addPictureContainer = document.createElement("div");
-const crossPreview = document.createElement("i");
 const iconPicture = document.createElement("i");
 const selectPictureLabel = document.createElement("label");
 const selectPictureBtn = document.createElement("input");
@@ -48,6 +47,7 @@ const option4 = document.createElement("option");
 const validBtn = document.createElement("button");
 
 let travauxData = "";
+let categoryData;
 
 //Fonction de récuperation des travaux
 const fetchTravaux = async () => {
@@ -85,7 +85,7 @@ const displayTravaux = (travaux) => {
 
 const fetchFilters = async () => {
   const response = await fetch("http://localhost:5678/api/categories");
-  const categoryData = await response.json();
+  categoryData = await response.json();
   displayFilters(categoryData);
   manageFilterClick(); // Appel de la fonction pour gérer les filtres au clic
 };
@@ -166,6 +166,7 @@ const modeAdmin = () => {
 let auth = JSON.parse(localStorage.getItem("auth")) ?? false;
 
 if (auth) {
+  // Si auth est vrai...
   modeAdmin();
   liLogout.addEventListener("click", () => {
     window.localStorage.removeItem("auth");
@@ -285,6 +286,9 @@ const addModale = () => {
   containerModaleAdd.addEventListener("click", () => {
     containerModaleAdd.style.display = "none";
 
+    inputTitle.value = "";
+    categoryInput.value = "";
+
     // Efface l'image sélectionnée et réinitialise le bouton d'ajout de photo
     addPictureContainer.innerHTML = "";
     selectPictureBtn.value = null;
@@ -322,6 +326,9 @@ const addModale = () => {
     addPictureContainer.innerHTML = "";
     selectPictureBtn.value = null;
 
+    inputTitle.value = "";
+    categoryInput.value = "";
+
     // Supprime l'élément d'erreur s'il existe
     const errorElement = document.querySelector(".error-img");
     if (errorElement) {
@@ -344,6 +351,9 @@ const addModale = () => {
     displayModale();
     containerModaleAdd.style.display = "none";
     selectPictureBtn.value = null;
+
+    inputTitle.value = "";
+    categoryInput.value = "";
 
     // Supprimer l'élément d'erreur s'il existe
     const errorElement = document.querySelector(".error-img");
@@ -497,7 +507,8 @@ const addModale = () => {
       validBtn.style.backgroundColor = "#1d6154";
       validBtn.addEventListener("click", (event) => {
         event.preventDefault();
-        fetchSendWork(title, file, category);
+        const categoryId = categoryData.find((el) => el.name === category).id;
+        fetchSendWork(title, file, categoryId);
       });
     } else {
       validBtn.disabled = true;
@@ -512,7 +523,7 @@ const addModale = () => {
 const fetchSendWork = async (title, file, category) => {
   const formData = new FormData();
   formData.append("title", title);
-  formData.append("imageUrl", file);
+  formData.append("image", file);
   formData.append("category", category);
 
   try {
