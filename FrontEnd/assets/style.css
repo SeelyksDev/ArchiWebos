@@ -206,7 +206,9 @@ body {
 }
 
 .modale-img {
+  object-fit: cover;
   height: 130px;
+  width: 95px;
 }
 
 .remove-box {
@@ -326,6 +328,7 @@ body {
   margin-bottom: 10px;
   cursor: pointer;
 }
+
 #select-picture {
   display: none;
 }
@@ -370,6 +373,14 @@ body {
   border: none;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   font-family: "Work Sans";
+}
+
+.validate-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: green;
+  font-weight: bold;
 }
 
 .valid-btn {
@@ -434,7 +445,7 @@ h1 {
   color: #b1663c;
 }
 
-h1 > span {
+h1>span {
   font-family: "Work Sans";
   font-size: 10px;
   letter-spacing: 0.1em;
@@ -589,7 +600,9 @@ li:hover {
 }
 
 .gallery img {
+  object-fit: cover;
   width: 100%;
+  height: 490px;
 }
 
 #contact {
@@ -597,7 +610,7 @@ li:hover {
   margin: auto;
 }
 
-#contact > * {
+#contact>* {
   text-align: center;
 }
 

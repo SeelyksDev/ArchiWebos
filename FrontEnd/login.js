@@ -1,15 +1,4 @@
-const envoyer = document.querySelector(".form-login");
 const wrongInfo = document.querySelector(".wrong-info");
-
-envoyer.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const infoUser = dataUser(event);
-    if (verifRegExp(infoUser)) {
-        recupToken(infoUser);
-    } else {
-        DisplayWrongInfo("E-mail ou Mot de passe incorrect");
-    }
-});
 
 const dataUser = (event) => {
     const email = event.target.querySelector("[name=email]").value;
@@ -26,6 +15,10 @@ const verifRegExp = (authValue) => {
     );
 };
 
+const displayWrongInfo = (message) => {
+    wrongInfo.textContent = message;
+};
+
 const recupToken = async (authValue) => {
     try {
         const chargeUtile = JSON.stringify(authValue);
@@ -38,6 +31,7 @@ const recupToken = async (authValue) => {
         let response = await fetch(url, options);
         let data = await response.json();
         if (!response.ok) {
+            displayWrongInfo("E-mail ou Mot de passe incorrect");
             throw new Error("Erreur réseau.");
         } else {
             localStorage.setItem("auth", JSON.stringify(data));
@@ -45,9 +39,17 @@ const recupToken = async (authValue) => {
             window.location.href = "index.html";
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 };
-const DisplayWrongInfo = (message) => {
-    wrongInfo.textContent = message;
-};
+
+const envoyer = document.querySelector(".form-login");
+envoyer.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const infoUser = dataUser(event);
+    if (verifRegExp(infoUser)) {
+        recupToken(infoUser);
+    } else {
+        displayWrongInfo("E-mail ou Mot de passe incorrect");
+    }
+});
