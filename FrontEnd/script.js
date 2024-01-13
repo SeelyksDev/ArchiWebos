@@ -135,7 +135,6 @@ const modeAdmin = () => {
 
     editionProjet.style.display = "block";
 
-    // Cache la boîte de filtre
     filterBox.style.visibility = "hidden";
 };
 
@@ -587,6 +586,49 @@ const verificationEachInputValue = () => {
     categoryInput.addEventListener("input", toggleValidBtn);
 };
 
+const resetFormElements = () => {
+    selectPictureBtn.value = null;
+    addPictureContainer.innerHTML = "";
+    inputTitle.value = "";
+    categoryInput.value = "";
+    iconInsertPicture();
+    selectPictureLabelInit();
+    selectPictureLabelListener();
+    selectPictureInput();
+    infoSelectPicture();
+    toggleValidBtn();
+};
+
+const fetchSendWork = async (title, file, category) => {
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("image", file);
+    formData.append("category", category);
+
+    try {
+        const response = await fetch("http://localhost:5678/api/works", {
+            method: "POST",
+            headers: {
+                accept: "application/json",
+                authorization: `Bearer ${auth.token}`,
+            },
+            body: formData,
+        });
+
+        if (!response.ok) {
+            console.log(response);
+            throw new Error("L'envoi n'a pas pu aboutir");
+        } else {
+            const data = await response.json();
+            await fetchTravaux();
+            displayGallery(travauxData);
+            resetFormElements();
+            displayConfirmation();
+        }
+    } catch (error) {
+        console.error("Erreur ", error);
+    }
+};
 let optionsInitialized = false;
 let categoryLabelInitialized = false;
 
@@ -625,48 +667,4 @@ const createModale = () => {
     validBtnInit();
     toggleValidBtn();
     verificationEachInputValue();
-};
-
-const fetchSendWork = async (title, file, category) => {
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("image", file);
-    formData.append("category", category);
-
-    try {
-        const response = await fetch("http://localhost:5678/api/works", {
-            method: "POST",
-            headers: {
-                accept: "application/json",
-                authorization: `Bearer ${auth.token}`,
-            },
-            body: formData,
-        });
-
-        if (!response.ok) {
-            console.log(response);
-            throw new Error("L'envoi n'a pas pu aboutir");
-        } else {
-            const data = await response.json();
-            await fetchTravaux();
-            displayGallery(travauxData);
-            resetFormElements();
-            displayConfirmation();
-        }
-    } catch (error) {
-        console.error("Erreur ", error);
-    }
-};
-
-const resetFormElements = () => {
-    selectPictureBtn.value = null;
-    addPictureContainer.innerHTML = "";
-    inputTitle.value = "";
-    categoryInput.value = "";
-    iconInsertPicture();
-    selectPictureLabelInit();
-    selectPictureLabelListener();
-    selectPictureInput();
-    infoSelectPicture();
-    toggleValidBtn();
 };
